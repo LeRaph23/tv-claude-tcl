@@ -2,6 +2,8 @@
 
 La TCL des parents, sans pubs et plus rapide. Tout repose sur [CleanYourTV](https://github.com/Gathin23/cleanyourtv) de Gathin (licence MIT) : ses outils, son launcher et ses listes testées sur 32 modèles TCL. Ce repo ne contient que nos réglages : le dock, le fond et les boutons de la télécommande.
 
+**Le jour J, suis [JOUR-J.md](JOUR-J.md)** : toutes les commandes pour la 55P638, dans l'ordre, depuis un Mac.
+
 Rien n'est flashé, rooté ni supprimé : les apps sont **désactivées**, et une commande remet la TV comme avant.
 
 ## Comment ça marche
