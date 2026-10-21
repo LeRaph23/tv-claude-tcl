@@ -1,0 +1,16 @@
+{
+  "dock_apps": [
+    "com.netflix.ninja",
+    "com.google.android.youtube.tv",
+    "com.disney.disneyplus",
+    "com.amazon.amazonvideo.livingroom"
+  ],
+  "background_color": "#0B1424",
+  "wallpaper": true,
+  "wallpaper_dim": 0,
+  "app_keys": [
+    "4062:com.netflix.ninja",
+    "4065:com.google.android.youtube.tv",
+    "4099:com.amazon.amazonvideo.livingroom"
+  ]
+}
