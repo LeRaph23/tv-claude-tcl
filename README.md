@@ -82,7 +82,7 @@ tools/restore.sh examples/tcl-65c735/debloat.txt com.google.android.apps.tv.laun
 
 | Clé | Rôle |
 |---|---|
-| `dock_apps` | Les apps de la rangée du haut, dans l'ordre. Les absentes sont ignorées |
+| `dock_apps`, `columns` | La rangée du haut, dans l'ordre : myCANAL, Netflix, Ligue 1+, YouTube, Prime Video. Les apps absentes sont ignorées. **Ligue 1+ est à ajouter** en 3e position une fois son identifiant lu sur la TV (`tools/tv.py 'pm list packages' \| grep -i ligue`) |
 | `background_color`, `wallpaper` | Fond bleu nuit plus clair que le noir par défaut, avec le fond d'écran « aurora » de Gathin, pour que les tuiles ressortent |
 | `app_keys` | Les touches Netflix, YouTube et Prime Video de la télécommande. Sans ça, elles ne font plus rien une fois l'accueil Google TV désactivé (codes relevés sur la 65C735, à vérifier sur un autre modèle) |
 
@@ -90,4 +90,21 @@ Un `config.json` invalide est ignoré en entier par le launcher : un réglage ra
 
 ## La méthode la plus sûre : Claude Code
 
-C'est la méthode prévue par Gathin. Sur l'ordi, dans le dossier `cleanyourtv`, lance Claude Code et colle le contenu de [`PROMPT.md`](https://github.com/Gathin23/cleanyourtv/blob/9071ec8/PROMPT.md) en y mettant le modèle de la TV et en précisant d'utiliser `../tv-claude-tcl/theme`. Il sauvegarde l'état de la TV, cherche les apps à désactiver sur ta TV précisément, te demande avant chaque choix et vérifie chaque étape avec une capture d'écran de la TV.
+C'est la méthode prévue par Gathin. Sur l'ordi, dans le dossier `cleanyourtv`, lance `claude`, colle tout le contenu de [`PROMPT.md`](https://github.com/Gathin23/cleanyourtv/blob/9071ec8/PROMPT.md), puis ajoute à la fin :
+
+```
+Modèle de la TV : <modèle>. IP : <IP>.
+Utilise les outils de ce dossier (tools/, launcher/, examples/) plutôt que d'en écrire.
+Installe le launcher avec INPUT_KEY_SERVICE=1.
+Ce que mes parents utilisent :
+- apps : myCANAL, Netflix, Ligue 1+, YouTube, Prime Video. Garde-les, avec le Play Store pour leurs mises à jour ;
+- la TNT passe par un décodeur branché en HDMI : la touche Source, la liste des sources et l'entrée HDMI doivent marcher ;
+- ni le micro ni l'Assistant Google : tu peux les désactiver ;
+- pas de Chromecast : tu peux le désactiver.
+Trouve le nom du paquet de Ligue 1+ sur la TV et ajoute-le en 3e position de dock_apps dans ../tv-claude-tcl/theme/config.json.
+Vérifie aussi les codes des touches Netflix, YouTube et Prime de la télécommande et corrige app_keys si besoin.
+À la fin, applique le thème avec tools/theme.sh ../tv-claude-tcl/theme.
+Ne désactive rien sans me demander.
+```
+
+Il sauvegarde l'état de la TV, cherche les apps à désactiver sur cette TV précisément, demande avant chaque choix et vérifie chaque étape avec une capture d'écran de la TV.

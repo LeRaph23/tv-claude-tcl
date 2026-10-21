@@ -1,10 +1,11 @@
 {
   "dock_apps": [
+    "com.canal.android.canal",
     "com.netflix.ninja",
     "com.google.android.youtube.tv",
-    "com.disney.disneyplus",
     "com.amazon.amazonvideo.livingroom"
   ],
+  "columns": 5,
   "background_color": "#0B1424",
   "wallpaper": true,
   "wallpaper_dim": 0,
