@@ -5,10 +5,12 @@
     "com.google.android.youtube.tv",
     "com.amazon.amazonvideo.livingroom"
   ],
-  "columns": 5,
+  "columns": 6,
+  "dock_title": false,
+  "advanced_effects": true,
+  "sky_intensity": 60,
   "background_color": "#0B1424",
-  "wallpaper": true,
-  "wallpaper_dim": 0,
+  "wallpaper": false,
   "app_keys": [
     "4062:com.netflix.ninja",
     "4065:com.google.android.youtube.tv",

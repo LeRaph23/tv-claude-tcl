@@ -39,7 +39,6 @@ git clone https://github.com/Gathin23/cleanyourtv
 cd cleanyourtv
 git checkout 9071ec8
 python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt
-cp themes/aurora/wallpaper.jpg ../tv-claude-tcl/theme/
 export TV_HOST=192.168.1.50          # l'IP de la TV
 ```
 
@@ -82,8 +81,12 @@ tools/restore.sh examples/tcl-65c735/debloat.txt com.google.android.apps.tv.laun
 
 | Clé | Rôle |
 |---|---|
-| `dock_apps`, `columns` | La rangée du haut, dans l'ordre : myCANAL, Netflix, Ligue 1+, YouTube, Prime Video. Les apps absentes sont ignorées. **Ligue 1+ est à ajouter** en 3e position une fois son identifiant lu sur la TV (`tools/tv.py 'pm list packages' \| grep -i ligue`) |
-| `background_color`, `wallpaper` | Fond bleu nuit plus clair que le noir par défaut, avec le fond d'écran « aurora » de Gathin, pour que les tuiles ressortent |
+| `dock_apps` | La rangée du haut, dans l'ordre : myCANAL, Netflix, Ligue 1+, YouTube, Prime Video. Les apps absentes sont ignorées. **Ligue 1+ est à ajouter** en 3e position une fois son identifiant lu sur la TV (`tools/tv.py 'pm list packages' \| grep -i ligue`) |
+| `columns` | 6 tuiles par rangée : dock et icônes plus petits |
+| `dock_title` | `false` : pas de nom d'app en grand au-dessus du dock |
+| `advanced_effects` | Animations façon Apple TV : la tuile se soulève, l'icône zoome, la couleur d'ambiance glisse. Plus gourmand en mémoire : si ça saccade, passe-le à `false` |
+| `sky_intensity` | Fond qui suit l'heure (nuit, jour, coucher de soleil), recalculé une fois par minute. 0 à 100 ; plus haut = plus visible |
+| `background_color`, `wallpaper` | Bleu nuit sous le ciel, pas de fond d'écran (le ciel le remplace) |
 | `app_keys` | Les touches Netflix, YouTube et Prime Video de la télécommande. Sans ça, elles ne font plus rien une fois l'accueil Google TV désactivé (codes relevés sur la 65C735, à vérifier sur un autre modèle) |
 
 Un `config.json` invalide est ignoré en entier par le launcher : un réglage raté ne peut pas casser l'écran d'accueil. Pour modifier : édite le fichier, puis relance `tools/theme.sh ../tv-claude-tcl/theme`.
