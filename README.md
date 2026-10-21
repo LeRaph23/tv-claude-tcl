@@ -12,7 +12,7 @@ Rien n'est flashé, rooté ni supprimé : les apps sont **désactivées**, et un
 
 ## 0. Avant de commencer
 
-- **Le modèle exact de la TV** : étiquette au dos, ou **Paramètres > Système > À propos**. Gathin a une liste testée sur une TCL 65C735 française (Google TV) ; si le modèle est différent, la liste à utiliser doit correspondre à la plateforme de la TV, pas seulement à la marque.
+- **La TV : TCL 55P638 (2022)**. Google TV sur Android 11, plateforme TCL « G07 » (Realtek RTD2851A, 2 Go de RAM). Gathin a une liste pour cette plateforme, testée sur deux vraies TV, dont une en France : `examples/tcl-g07-google-tv`.
 - Rien de branché en USB sur la TV pendant l'opération : certaines coupent l'alimentation du port quand le débogage est activé.
 
 ## 1. Sur la TV
@@ -48,15 +48,20 @@ export TV_HOST=192.168.1.50          # l'IP de la TV
 tools/venv/bin/python -I tools/tv.py --probe
 ```
 
-Accepte « Autoriser le débogage ? » sur la TV (coche « Toujours »). La commande affiche le modèle, la version d'Android et le firmware. Choisis la liste de `examples/` qui correspond (`tcl-65c735` pour une TCL C735 française en Google TV). **En cas de doute, ne va pas plus loin** : la [méthode avec Claude Code](#la-méthode-la-plus-sûre--claude-code) détecte les apps de la TV elle-même.
+Accepte « Autoriser le débogage ? » sur la TV (coche « Toujours »). La commande affiche le modèle, la version d'Android et le firmware. La plateforme doit indiquer **G07** (ex. `G07_4K_GB_NF`) : c'est la liste `tcl-g07-google-tv`. **Si ce n'est pas G07, ne va pas plus loin** : la [méthode avec Claude Code](#la-méthode-la-plus-sûre--claude-code) détecte les apps de la TV elle-même.
 
 ## 4. Nettoyer, puis changer l'écran d'accueil
 
-D'abord, relis la liste (`examples/tcl-65c735/debloat.txt`) et mets un `#` devant ce que tes parents utilisent. Le lot 4 coupe l'**Assistant Google, donc le bouton micro** de la télécommande (`katniss`, `tv.assistant`) et AirPlay.
+D'abord, ouvre `examples/tcl-g07-google-tv/debloat.txt` et mets un `#` au début de ces deux lignes :
+
+- `com.amazon.amazonvideo.livingroom` : **c'est Prime Video**, que la liste désactive par défaut ;
+- `com.tcl.ttvs` : c'est aussi le service de mise à jour de la TV. On garde les mises à jour.
+
+Le reste convient à tes parents : la liste coupe l'Assistant Google (le micro) et le partage d'écran TCL, et garde la TV, les sources HDMI, Netflix, YouTube et Chromecast.
 
 ```bash
-INPUT_KEY_SERVICE=1 launcher/build-and-install.sh                   # 1. installe le launcher et en fait l'accueil
-tools/disable.sh examples/tcl-65c735/debloat.txt                    # 2. désactive pubs, télémétrie, apps TCL inutiles
+HOME_KEY_SERVICE=1 launcher/build-and-install.sh                    # 1. installe le launcher et en fait l'accueil
+tools/disable.sh examples/tcl-g07-google-tv/debloat.txt             # 2. désactive pubs, télémétrie, apps TCL inutiles
 tools/theme.sh ../tv-claude-tcl/theme                               # 3. notre dock et notre fond
 ```
 
@@ -72,7 +77,7 @@ tools/theme.sh ../tv-claude-tcl/theme                               # 3. notre d
 ## Tout annuler
 
 ```bash
-tools/restore.sh examples/tcl-65c735/debloat.txt com.google.android.apps.tv.launcherx
+tools/restore.sh examples/tcl-g07-google-tv/debloat.txt com.google.android.apps.tv.launcherx
 ```
 
 Ça réactive tout, et l'accueil Google TV revient. Même sans ordi, **Paramètres > Applications** sur la TV permet de réactiver une app.
@@ -87,7 +92,7 @@ tools/restore.sh examples/tcl-65c735/debloat.txt com.google.android.apps.tv.laun
 | `advanced_effects` | Animations façon Apple TV : la tuile se soulève, l'icône zoome, la couleur d'ambiance glisse. Plus gourmand en mémoire : si ça saccade, passe-le à `false` |
 | `sky_intensity` | Fond qui suit l'heure (nuit, jour, coucher de soleil), recalculé une fois par minute. 0 à 100 ; plus haut = plus visible |
 | `background_color`, `wallpaper` | Bleu nuit sous le ciel, pas de fond d'écran (le ciel le remplace) |
-| `app_keys` | Les touches Netflix, YouTube et Prime Video de la télécommande. Sans ça, elles ne font plus rien une fois l'accueil Google TV désactivé (codes relevés sur la 65C735, à vérifier sur un autre modèle) |
+| `app_keys`, `settings_key_keycodes` | Les touches Netflix, YouTube, Prime Video et la roue crantée (réglages) de la télécommande : sans ça, elles ne font plus rien une fois l'accueil Google TV désactivé. Codes vérifiés par Gathin sur une G07 française avec la télécommande Bluetooth ; ils demandent `HOME_KEY_SERVICE=1` à l'installation. La touche Source marche toute seule sur la G07 |
 
 Un `config.json` invalide est ignoré en entier par le launcher : un réglage raté ne peut pas casser l'écran d'accueil. Pour modifier : édite le fichier, puis relance `tools/theme.sh ../tv-claude-tcl/theme`.
 
@@ -96,16 +101,17 @@ Un `config.json` invalide est ignoré en entier par le launcher : un réglage ra
 C'est la méthode prévue par Gathin. Sur l'ordi, dans le dossier `cleanyourtv`, lance `claude`, colle tout le contenu de [`PROMPT.md`](https://github.com/Gathin23/cleanyourtv/blob/9071ec8/PROMPT.md), puis ajoute à la fin :
 
 ```
-Modèle de la TV : <modèle>. IP : <IP>.
+IP de la TV : <IP>.
 Utilise les outils de ce dossier (tools/, launcher/, examples/) plutôt que d'en écrire.
-Installe le launcher avec INPUT_KEY_SERVICE=1.
+Modèle : TCL 55P638 (plateforme G07). Utilise examples/tcl-g07-google-tv/debloat.txt, sans désactiver Prime Video (com.amazon.amazonvideo.livingroom) ni com.tcl.ttvs (mises à jour).
+Installe le launcher avec HOME_KEY_SERVICE=1.
 Ce que mes parents utilisent :
 - apps : myCANAL, Netflix, Ligue 1+, YouTube, Prime Video. Garde-les, avec le Play Store pour leurs mises à jour ;
 - la TNT passe par un décodeur branché en HDMI : la touche Source, la liste des sources et l'entrée HDMI doivent marcher ;
 - ni le micro ni l'Assistant Google : tu peux les désactiver ;
 - pas de Chromecast : tu peux le désactiver.
 Trouve le nom du paquet de Ligue 1+ sur la TV et ajoute-le en 3e position de dock_apps dans ../tv-claude-tcl/theme/config.json.
-Vérifie aussi les codes des touches Netflix, YouTube et Prime de la télécommande et corrige app_keys si besoin.
+Vérifie avec la vraie télécommande les touches Netflix, YouTube, Prime Video et la roue crantée, et corrige app_keys / settings_key_keycodes si besoin (getevent -lt).
 À la fin, applique le thème avec tools/theme.sh ../tv-claude-tcl/theme.
 Ne désactive rien sans me demander.
 ```
